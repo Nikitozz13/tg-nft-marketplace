@@ -4,8 +4,8 @@ import { Client } from "@notionhq/client";
 import { extractNFTTokenFriendlyAddress, getNFTTokenPageRequestParameters } from './utils';
 import { isFullPage } from '@notionhq/client/build/src/helpers';
 
-const NOTION_API_KEY = process.env.NEXT_PUBLIC_NOTION_API_KEY;
-const DATABASE_ID = process.env.NEXT_PUBLIC_NOTION_DATABASE_ID;
+const NOTION_API_KEY = process.env.NOTION_API_KEY;
+const DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
 const notion = new Client({
   auth: NOTION_API_KEY,
