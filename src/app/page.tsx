@@ -1,62 +1,90 @@
 'use client';
 
-import { Section, Cell, Image, List } from '@telegram-apps/telegram-ui';
-import { useTranslations } from 'next-intl';
+import {
+  TonConnectButton,
+  useIsConnectionRestored,
+  useTonWallet,
+} from '@tonconnect/ui-react';
+import {
+  List,
+  Placeholder,
+  Text,
+} from '@telegram-apps/telegram-ui';
 
-import { Link } from '@/components/Link/Link';
-import { LocaleSwitcher } from '@/components/LocaleSwitcher/LocaleSwitcher';
-import { Page } from '@/components/Page';
-
-import tonSvg from './_assets/ton.svg';
+import './styles.css';
+import { useEffect, useState } from 'react';
+import { NFTTokenInfo } from './api/tokens/types';
+import NFTTokenCard from '@/components/NFTTokenCard';
 
 export default function Home() {
-  const t = useTranslations('i18n');
+  const wallet = useTonWallet();
+  const connectionRestored = useIsConnectionRestored();
+  const [nftTokensInfo, setNftTokensInfo] = useState<NFTTokenInfo[]>([]);
+
+  useEffect(() => {
+    const notionQuery = async () => {
+      const res = await fetch('/api/tokens', { method: 'GET' }).then((res) => res.json());
+      setNftTokensInfo(res);
+    }
+    notionQuery();
+  }, []);
+
+  if (!connectionRestored) {
+    return (
+      <Placeholder
+        className="ton-connect-page__placeholder"
+        description={
+          <Text>
+            Restoring page data...
+          </Text>
+        }
+      />
+    )
+  }
+
+  if (!wallet) {
+    return (
+      <Placeholder
+        className="ton-connect-page__placeholder"
+        header="TON Connect"
+        description={
+          <>
+            <Text>
+              To display the data related to the TON Connect, it is required
+              to connect your wallet
+            </Text>
+            <TonConnectButton className="ton-connect-page__button"/>
+          </>
+        }
+      />
+    );
+  }
 
   return (
-    <Page back={false}>
+    <>
+      <TonConnectButton className="ton-connect-page__button-connected"/>
       <List>
-        <Section
-          header="Features"
-          footer="You can use these pages to learn more about features, provided by Telegram Mini Apps and other useful projects"
-        >
-          <Link href="/ton-connect">
-            <Cell
-              before={
-                <Image
-                  src={tonSvg.src}
-                  style={{ backgroundColor: '#007AFF' }}
-                />
-              }
-              subtitle="Connect your TON wallet"
-            >
-              TON Connect
-            </Cell>
-          </Link>
-        </Section>
-        <Section
-          header="Application Launch Data"
-          footer="These pages help developer to learn more about current launch information"
-        >
-          <Link href="/init-data">
-            <Cell subtitle="User data, chat information, technical data">
-              Init Data
-            </Cell>
-          </Link>
-          <Link href="/launch-params">
-            <Cell subtitle="Platform identifier, Mini Apps version, etc.">
-              Launch Parameters
-            </Cell>
-          </Link>
-          <Link href="/theme-params">
-            <Cell subtitle="Telegram application palette information">
-              Theme Parameters
-            </Cell>
-          </Link>
-        </Section>
-        <Section header={t('header')} footer={t('footer')}>
-          <LocaleSwitcher/>
-        </Section>
+        {nftTokensInfo.map(({
+          friendlyAddress,
+          rawAddress,
+          ownerAddress,
+          image,
+          name,
+          description,
+        }) => (
+          <>
+            <NFTTokenCard
+              key={rawAddress}
+              image={image.small}
+              friendlyAddress={friendlyAddress}
+              rawAddress={rawAddress}
+              ownerAddress={ownerAddress}
+              name={name}
+              description={description}
+            />
+          </>
+        ))}
       </List>
-    </Page>
+    </>
   );
-}
+};

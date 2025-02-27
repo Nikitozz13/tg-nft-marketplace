@@ -20,9 +20,10 @@ import './styles.css';
 
 export default function TONConnectPage() {
   const wallet = useTonWallet();
+
   if (!wallet) {
     return (
-      <Page>
+      <Page back={false}>
         <Placeholder
           className="ton-connect-page__placeholder"
           header="TON Connect"
