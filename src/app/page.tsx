@@ -8,13 +8,12 @@ import {
 import {
   List,
   Placeholder,
-  Spinner,
   Text,
 } from '@telegram-apps/telegram-ui';
 
 import './styles.css';
-import { useEffect, useState } from 'react';
-import { NFTTokenInfo } from './api/tokens/types';
+import { useCallback, useEffect, useState } from 'react';
+import { GetTokensResponse, NFTTokenInfo } from './api/tokens/types';
 import NFTTokenCard from '@/components/NFTTokenCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { InfiniteLoader } from '@/components/Loaders/InfiniteLoader';
@@ -24,23 +23,20 @@ export default function Home() {
   const wallet = useTonWallet();
   const connectionRestored = useIsConnectionRestored();
   const [nftTokensInfo, setNftTokensInfo] = useState<NFTTokenInfo[]>([]);
-  const [hasMoreData, setHasMoreData] = useState(true);
+  const [hasMoreData, setHasMoreData] = useState<boolean>(true);
+  const [nextPage, setNextPage] = useState<string>('');
+
+  const fetchTokens = useCallback(async () => {
+    const res = await fetch(`/api/tokens?page=${nextPage}`, { method: 'GET' });
+    const { data, hasMore, nextPage: page }: GetTokensResponse = await res.json();
+    setNftTokensInfo([...nftTokensInfo, ...data]);
+    setNextPage(page);
+    setHasMoreData(hasMore);
+  }, [nextPage]);
 
   useEffect(() => {
-    const notionQuery = async () => {
-      const res = await fetch('/api/tokens', { method: 'GET' }).then((res) => res.json());
-      setNftTokensInfo(res);
-    }
-    notionQuery();
+    fetchTokens();
   }, []);
-
-  const fetchMoreData = async () => {
-    setTimeout(async() => {
-      const res = await fetch(`/api/tokens?page=${1}`, { method: 'GET' }).then((res) => res.json());
-      setNftTokensInfo([...nftTokensInfo, ...res]);
-      setHasMoreData(false);
-    }, 3000);
-  };
 
   if (!connectionRestored) {
     return (
@@ -79,7 +75,7 @@ export default function Home() {
       <List>
         <InfiniteScroll
           dataLength={nftTokensInfo.length}
-          next={fetchMoreData}
+          next={fetchTokens}
           hasMore={hasMoreData}
           loader={<InfiniteLoader />}
           endMessage={<InfiniteLoaderEnd />}
@@ -92,17 +88,15 @@ export default function Home() {
             name,
             description,
           }) => (
-            <>
-              <NFTTokenCard
-                key={rawAddress}
-                image={image.small}
-                friendlyAddress={friendlyAddress}
-                rawAddress={rawAddress}
-                ownerAddress={ownerAddress}
-                name={name}
-                description={description}
-              />
-            </>
+            <NFTTokenCard
+              key={rawAddress}
+              image={image.small}
+              friendlyAddress={friendlyAddress}
+              rawAddress={rawAddress}
+              ownerAddress={ownerAddress}
+              name={name}
+              description={description}
+            />
           ))}
         </InfiniteScroll>
       </List>

@@ -2,7 +2,7 @@ import { NextResponse  } from "next/server";
 import { getTokens } from "@/app/utils/api/notionClient";
 import { getNFTTokensInfo } from "@/app/utils/api/nftClient";
 import { NFTResponse } from "@/app/utils/api/nftClient/types";
-import { NFTTokenInfo } from "./types";
+import { NFTTokenInfo, GetTokensResponse } from "./types";
 
 function extractTokenData(nftResponse: NFTResponse): NFTTokenInfo[] {
   return nftResponse.nft_items
@@ -30,9 +30,17 @@ function extractTokenData(nftResponse: NFTResponse): NFTTokenInfo[] {
     .filter(p => p !== null);
 }
 
-export async function GET() {
-  const tokenAddresses = await getTokens();
+export async function GET(req: Request): Promise<NextResponse<GetTokensResponse>> {
+  const { searchParams } = new URL(req.url);
+  const page = searchParams.get('page');
+
+  const { data: tokenAddresses, hasMore, nextPage } = await getTokens({ nextPage: page });
   const tokensInfo = await getNFTTokensInfo(tokenAddresses);
   const extractedData = extractTokenData(tokensInfo);
-  return NextResponse.json(extractedData);
+
+  return NextResponse.json({
+    data: extractedData,
+    hasMore,
+    nextPage,
+  });
 }

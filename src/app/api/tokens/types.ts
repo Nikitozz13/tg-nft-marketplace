@@ -10,3 +10,9 @@ export type NFTTokenInfo = {
   name: string;
   description: string;
 }
+
+export type GetTokensResponse = {
+  data: NFTTokenInfo[],
+  hasMore: boolean,
+  nextPage: string,
+}

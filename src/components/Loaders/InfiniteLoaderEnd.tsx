@@ -6,7 +6,7 @@ export const InfiniteLoaderEnd: React.FC = () => {
   return (
     <div className='flex items-center justify-center p-2 pb-8'>
       <div className='flex flex-col items-center justify-center'>
-        <p>There's nothing to see here... yet!</p>
+        <p>There&apos;s nothing to see here... yet!</p>
         <FontAwesomeIcon
           icon={faMugHot}
           size='2xl'
