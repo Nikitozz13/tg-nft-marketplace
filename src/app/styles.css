@@ -14,3 +14,7 @@
 .ton-connect-page__button-connected {
   margin: 16px 24px 16px auto;
 }
+
+.icon-custom-animation {
+  --fa-animation-iteration-count: 3;
+}

@@ -23,6 +23,7 @@
     "normalize.css": "^8.0.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-infinite-scroll-component": "^6.1.0",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
