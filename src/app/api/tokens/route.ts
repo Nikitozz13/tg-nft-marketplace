@@ -30,17 +30,43 @@ function extractTokenData(nftResponse: NFTResponse): NFTTokenInfo[] {
     .filter(p => p !== null);
 }
 
+async function fetchDataWithRetries(page: string | null, retries: number = 3) {
+  try {
+    const { data: tokenAddresses, hasMore, nextPage } = await getTokens({ nextPage: page });
+    const tokensInfo = await getNFTTokensInfo(tokenAddresses);
+    return { tokensInfo, hasMore, nextPage };
+
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error occurred while fetching data:', error.message);
+    }
+
+    if (retries > 0) {
+      console.log(`Retrying... Attempts left: ${retries}`);
+      return fetchDataWithRetries(page, retries - 1);
+    } else {
+      throw new Error('Failed to fetch data after multiple attempts');
+    }
+  }
+}
+
 export async function GET(req: Request): Promise<NextResponse<GetTokensResponse>> {
-  const { searchParams } = new URL(req.url);
-  const page = searchParams.get('page');
+  try {
+    const { searchParams } = new URL(req.url);
+    const page = searchParams.get('page');
+    const { tokensInfo, hasMore, nextPage } = await fetchDataWithRetries(page);
+    const extractedData = extractTokenData(tokensInfo);
+    return NextResponse.json({
+      data: extractedData,
+      hasMore,
+      nextPage,
+    });
 
-  const { data: tokenAddresses, hasMore, nextPage } = await getTokens({ nextPage: page });
-  const tokensInfo = await getNFTTokensInfo(tokenAddresses);
-  const extractedData = extractTokenData(tokensInfo);
-
-  return NextResponse.json({
-    data: extractedData,
-    hasMore,
-    nextPage,
-  });
+  } catch (error) {
+    return NextResponse.json({
+      data: [],
+      hasMore: false,
+      nextPage: '',
+    });
+  }
 }
