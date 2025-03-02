@@ -1,4 +1,5 @@
-import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { isFullPage } from "@notionhq/client";
+import { PageObjectResponse, QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
 
 const NFT_FRIENDLY_ADDRESS_DB_CELL_NAME = 'nft_friendly_address';
 
@@ -7,12 +8,10 @@ type NFTTokenPageModelType = {
   nftFriendlyAddress: string;
 };
 
-export const getNFTTokenPageRequestParameters = (
-  {
+export const getNFTTokenPageRequestParameters = ({
     databaseId,
     nftFriendlyAddress,
-  }: NFTTokenPageModelType
-) => ({
+}: NFTTokenPageModelType) => ({
   parent: {
     database_id: databaseId,
   },
@@ -41,3 +40,9 @@ export function extractNFTTokenFriendlyAddress({ properties }: PageObjectRespons
     ? properties[NFT_FRIENDLY_ADDRESS_DB_CELL_NAME].title[0].text.content
     : '';
 }
+
+export const convertTokensDbResponseToApiResult = (
+  results: QueryDatabaseResponse['results']
+) => results
+  .filter(isFullPage)
+  .map(extractNFTTokenFriendlyAddress);

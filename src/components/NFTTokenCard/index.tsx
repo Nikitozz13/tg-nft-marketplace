@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboard, faClipboardCheck } from '@fortawesome/free-solid-svg-icons'
-import { shortenAddress } from '@/utils/textUtils';
+import { shortenAddress } from '@/utils/text';
 import { Card } from '@telegram-apps/telegram-ui';
 
 const CopyButton = ({ text }: { text: string }) => {
