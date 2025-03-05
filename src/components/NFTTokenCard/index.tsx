@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboard, faClipboardCheck } from '@fortawesome/free-solid-svg-icons'
 import { shortenAddress } from '@/utils/text';
 import { Card } from '@telegram-apps/telegram-ui';
+import { NFTTokenInfo } from '@/app/api/tokens/types';
 
 const CopyButton = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
@@ -28,10 +29,16 @@ const CopyButton = ({ text }: { text: string }) => {
   );
 };
 
-const NFTTokenCard = ({ image, friendlyAddress, rawAddress, ownerAddress, name, description }: any) => {
+type NFTTokenCardProps = {
+  nftTokenInfo: NFTTokenInfo;
+}
+
+const NFTTokenCard: React.FC<NFTTokenCardProps> = ({ nftTokenInfo }) => {
+  const { image, friendlyAddress, rawAddress, ownerAddress, name, description } = nftTokenInfo;
+
   return (
     <Card className='flex p-4 m-2'>
-      <img src={image} alt={name} className="w-20 h-20 object-cover rounded-lg" />
+      <img src={image.small} alt={name} className="w-20 h-20 object-cover rounded-lg" />
 
       <div className="ml-4 flex flex-col justify-center text-white">
         <h2 className="text-lg font-semibold">{name}</h2>
