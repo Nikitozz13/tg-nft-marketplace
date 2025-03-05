@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClipboard, faClipboardCheck } from '@fortawesome/free-solid-svg-icons'
 import { shortenAddress } from '@/utils/text';
@@ -34,11 +35,20 @@ type NFTTokenCardProps = {
 }
 
 const NFTTokenCard: React.FC<NFTTokenCardProps> = ({ nftTokenInfo }) => {
+  const [imageError, setImageError] = useState<boolean>(false)
   const { image, friendlyAddress, rawAddress, ownerAddress, name, description } = nftTokenInfo;
 
   return (
     <Card className='flex p-4 m-2'>
-      <img src={image.small} alt={name} className="w-20 h-20 object-cover rounded-lg" />
+      <Image
+        src={imageError || !image.medium ? 'images/image_placeholder.svg' : image.medium}
+        alt={name}
+        width={80}
+        height={80}
+        className="w-20 h-20 min-w-20 object-contain object-top rounded-lg"
+        onError={() => setImageError(true)}
+        unoptimized
+      />
 
       <div className="ml-4 flex flex-col justify-center text-white">
         <h2 className="text-lg font-semibold">{name}</h2>
