@@ -17,6 +17,7 @@ import { GetTokensResponse, NFTTokenInfo } from '@/app/api/tokens/types';
 import NFTTokenCard from '@/components/NFTTokenCard';
 import { InfiniteLoader } from '@/components/Loaders/InfiniteLoader';
 import { InfiniteLoaderEnd } from '@/components/Loaders/InfiniteLoaderEnd';
+import './styles.css';
 
 type MarketplaceProps = {
   initialResponse: GetTokensResponse;
