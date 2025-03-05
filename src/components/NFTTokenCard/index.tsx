@@ -30,6 +30,10 @@ const CopyButton = ({ text }: { text: string }) => {
   );
 };
 
+const TextWithDefault = ({ text, defaultText }: { text: string, defaultText: string }) => {
+  return text ? text : <span className="italic text-gray-500">{defaultText}</span>
+}
+
 type NFTTokenCardProps = {
   nftTokenInfo: NFTTokenInfo;
 }
@@ -37,11 +41,12 @@ type NFTTokenCardProps = {
 const NFTTokenCard: React.FC<NFTTokenCardProps> = ({ nftTokenInfo }) => {
   const [imageError, setImageError] = useState<boolean>(false)
   const { image, friendlyAddress, rawAddress, ownerAddress, name, description } = nftTokenInfo;
+  const imageToRender = image.medium || image.small || image.big;
 
   return (
     <Card className='flex p-4 m-2'>
       <Image
-        src={imageError || !image.medium ? 'images/image_placeholder.svg' : image.medium}
+        src={imageError || !imageToRender ? 'images/image_placeholder.svg' : imageToRender}
         alt={name}
         width={80}
         height={80}
@@ -51,8 +56,12 @@ const NFTTokenCard: React.FC<NFTTokenCardProps> = ({ nftTokenInfo }) => {
       />
 
       <div className="ml-4 flex flex-col justify-center text-white">
-        <h2 className="text-lg font-semibold">{name}</h2>
-        <p className="text-gray-400">{description}</p>
+        <h2 className="text-lg font-semibold">
+          <TextWithDefault text={name} defaultText="No name available yet" />
+        </h2>
+        <p className="text-gray-400">
+          <TextWithDefault text={description} defaultText="Winter is coming... no description here." />
+        </p>
 
         <div className="mt-2 space-y-1 text-sm text-gray-200">
           <div><span className="font-semibold">Friendly Address:</span> <CopyButton text={friendlyAddress} /></div>
