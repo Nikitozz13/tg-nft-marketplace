@@ -1,34 +1,20 @@
 'use client';
 
-import {
-  TonConnectButton,
-  useIsConnectionRestored,
-  useTonWallet,
-} from '@tonconnect/ui-react';
-import {
-  List,
-  Placeholder,
-  Text,
-} from '@telegram-apps/telegram-ui';
-
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { TonConnectButton } from '@tonconnect/ui-react';
+import { List } from '@telegram-apps/telegram-ui';
 import { GetTokensResponse, NFTTokenInfo } from '@/app/api/tokens/types';
 import NFTTokenCard from '@/components/NFTTokenCard';
 import { InfiniteLoader } from '@/components/Loaders/InfiniteLoader';
 import { InfiniteLoaderEnd } from '@/components/Loaders/InfiniteLoaderEnd';
+import { withAuth } from '@/components/hoc/withAuth';
 import './styles.css';
 
-type MarketplaceProps = {
-  initialResponse: GetTokensResponse;
-}
-
-export default function Marketplace({ initialResponse }: MarketplaceProps) {
-  const wallet = useTonWallet();
-  const connectionRestored = useIsConnectionRestored();
-  const [nftTokensInfo, setNftTokensInfo] = useState<NFTTokenInfo[]>(initialResponse.data);
-  const [hasMoreData, setHasMoreData] = useState<boolean>(initialResponse.hasMore);
-  const [nextPage, setNextPage] = useState<string>(initialResponse.nextPage);
+const Marketplace = () => {
+  const [nftTokensInfo, setNftTokensInfo] = useState<NFTTokenInfo[]>([]);
+  const [hasMoreData, setHasMoreData] = useState<boolean>(true);
+  const [nextPage, setNextPage] = useState<string>('');
 
   const fetchTokens = useCallback(async () => {
     const res = await fetch(`/api/tokens?page=${nextPage}`, { method: 'GET' });
@@ -38,36 +24,9 @@ export default function Marketplace({ initialResponse }: MarketplaceProps) {
     setHasMoreData(hasMore);
   }, [nftTokensInfo, nextPage]);
 
-  if (!connectionRestored) {
-    return (
-      <Placeholder
-        className="ton-connect-page__placeholder"
-        description={
-          <Text>
-            Restoring page data...
-          </Text>
-        }
-      />
-    )
-  }
-
-  if (!wallet) {
-    return (
-      <Placeholder
-        className="ton-connect-page__placeholder"
-        header="TON Connect"
-        description={
-          <>
-            <Text>
-              To display the data related to the TON Connect, it is required
-              to connect your wallet
-            </Text>
-            <TonConnectButton className="ton-connect-page__button"/>
-          </>
-        }
-      />
-    );
-  }
+  useEffect(() => {
+    fetchTokens()
+  }, [])
 
   return (
     <>
@@ -88,3 +47,5 @@ export default function Marketplace({ initialResponse }: MarketplaceProps) {
     </>
   );
 };
+
+export default withAuth(Marketplace);
