@@ -1,7 +1,7 @@
 'use server'
 
-import { getTokens } from "@/app/utils/api/notionClient";
-import { getNFTTokensInfo } from "@/app/utils/api/nftClient";
+import { getTokens } from "@/server/api/notionClient";
+import { getNFTTokensInfo } from "@/server/api/nftClient";
 import { GetTokensResponse } from "./types";
 import { extractTokenData } from "./utils";
 

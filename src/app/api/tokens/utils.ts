@@ -1,4 +1,4 @@
-import { NFTResponse } from "@/app/utils/api/nftClient/model";
+import { NFTResponse } from "@/server/api/nftClient/model";
 import { NFTTokenInfo } from "./types";
 
 export function extractTokenData(nftResponse: NFTResponse): NFTTokenInfo[] {
