@@ -30,7 +30,6 @@ const Marketplace = () => {
 
   return (
     <>
-      <TonConnectButton className="ton-connect-page__button-connected"/>
       <List>
         <InfiniteScroll
           dataLength={tokens.length}
