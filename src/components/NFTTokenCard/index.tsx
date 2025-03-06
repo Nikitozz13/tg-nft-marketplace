@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Card } from '@telegram-apps/telegram-ui';
+import { Card, FixedLayout, Placeholder } from '@telegram-apps/telegram-ui';
 import { NFTTokenInfo } from '@/app/api/tokens/types';
 import TextWithDefault from './components/TextWithDefault';
 import CopyButton from './components/CopyButton';
+import ImageModal from './components/ImageModal';
 
 type NFTTokenCardProps = {
   nftTokenInfo: NFTTokenInfo;
@@ -11,19 +12,38 @@ type NFTTokenCardProps = {
 
 const NFTTokenCard: React.FC<NFTTokenCardProps> = ({ nftTokenInfo }) => {
   const [imageError, setImageError] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleImageClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   const { image, friendlyAddress, rawAddress, ownerAddress, name, description } = nftTokenInfo;
   const imageToRender = image.medium || image.small || image.big;
+  const imageSrc = imageError || !imageToRender ? 'images/image_placeholder.svg' : imageToRender;
 
   return (
     <Card className='flex p-4 m-2'>
       <Image
-        src={imageError || !imageToRender ? 'images/image_placeholder.svg' : imageToRender}
+        src={imageSrc}
         alt={name || friendlyAddress}
         width={80}
         height={80}
         className="w-20 h-20 min-w-20 object-contain object-top rounded-lg"
+        onClick={handleImageClick}
         onError={() => setImageError(true)}
         unoptimized
+      />
+
+      <ImageModal
+        imageUrl={imageSrc}
+        alt={name || friendlyAddress}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
       />
 
       <div className="ml-4 flex flex-col justify-center text-white">
