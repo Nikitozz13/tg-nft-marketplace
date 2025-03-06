@@ -19,6 +19,7 @@ import { setLocale } from '@/core/i18n/locale';
 import { init } from '@/core/init';
 
 import './styles.css';
+import ReactQueryProvider from '@/utils/providers/ReactQueryProvider';
 
 function RootInner({ children }: PropsWithChildren) {
   const isDev = process.env.NODE_ENV === 'development';
@@ -47,14 +48,16 @@ function RootInner({ children }: PropsWithChildren) {
   }, [initDataUser]);
 
   return (
-    <TonConnectUIProvider manifestUrl={manifestUrl}>
-      <AppRoot
-        appearance={isDark ? 'dark' : 'light'}
-        platform={['macos', 'ios'].includes(lp.platform) ? 'ios' : 'base'}
-      >
-        {children}
-      </AppRoot>
-    </TonConnectUIProvider>
+    <ReactQueryProvider>
+      <TonConnectUIProvider manifestUrl={manifestUrl}>
+        <AppRoot
+          appearance={isDark ? 'dark' : 'light'}
+          platform={['macos', 'ios'].includes(lp.platform) ? 'ios' : 'base'}
+        >
+          {children}
+        </AppRoot>
+      </TonConnectUIProvider>
+    </ReactQueryProvider>
   );
 }
 

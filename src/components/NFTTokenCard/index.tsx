@@ -47,7 +47,7 @@ const NFTTokenCard: React.FC<NFTTokenCardProps> = ({ nftTokenInfo }) => {
     <Card className='flex p-4 m-2'>
       <Image
         src={imageError || !imageToRender ? 'images/image_placeholder.svg' : imageToRender}
-        alt={name}
+        alt={name || friendlyAddress}
         width={80}
         height={80}
         className="w-20 h-20 min-w-20 object-contain object-top rounded-lg"

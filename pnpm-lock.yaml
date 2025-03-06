@@ -20,6 +20,12 @@ importers:
       '@notionhq/client':
         specifier: ^2.2.16
         version: 2.2.16
+      '@tanstack/react-query':
+        specifier: ^5.67.1
+        version: 5.67.1(react@18.3.1)
+      '@tanstack/react-query-devtools':
+        specifier: ^5.67.1
+        version: 5.67.1(@tanstack/react-query@5.67.1(react@18.3.1))(react@18.3.1)
       '@telegram-apps/sdk-react':
         specifier: ^2.0.22
         version: 2.0.22(@types/react@18.3.3)(react@18.3.1)
@@ -32,6 +38,9 @@ importers:
       eruda:
         specifier: ^3.0.1
         version: 3.0.1
+      lottie-react:
+        specifier: ^2.4.1
+        version: 2.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next:
         specifier: 14.2.4
         version: 14.2.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -440,6 +449,23 @@ packages:
 
   '@swc/helpers@0.5.5':
     resolution: {integrity: sha512-KGYxvIOXcceOAbEk4bi/dVLEK9z8sZ0uBB3Il5b1rhfClSpcX0yfRO0KmTkqR2cnQDymwLB+25ZyMzICg/cm/A==}
+
+  '@tanstack/query-core@5.67.1':
+    resolution: {integrity: sha512-AkFmuukVejyqVIjEQoFhLb3q+xHl7JG8G9cANWTMe3s8iKzD9j1VBSYXgCjy6vm6xM8cUCR9zP2yqWxY9pTWOA==}
+
+  '@tanstack/query-devtools@5.65.0':
+    resolution: {integrity: sha512-g5y7zc07U9D3esMdqUfTEVu9kMHoIaVBsD0+M3LPdAdD710RpTcLiNvJY1JkYXqkq9+NV+CQoemVNpQPBXVsJg==}
+
+  '@tanstack/react-query-devtools@5.67.1':
+    resolution: {integrity: sha512-a/2I8ORNalh+ek6Nyb9mEiq2u7vydjVMvaQz5ZieGq7r7DxgIFcPiMs4Ay0qkQvHfptESgXR5nImGTHmmt19yQ==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.67.1
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.67.1':
+    resolution: {integrity: sha512-fH5u4JLwB6A+wLFdi8wWBWAYoJV5deYif2OveJ26ktAWjU499uvVFS1wPWnyEyq5LvZX1MZInvv9QRaIZANRaQ==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@telegram-apps/bridge@1.9.0':
     resolution: {integrity: sha512-sdQLwcBxBKYSe8ydoahVbVzyUM5tYWnjOcmr5VsSXuem6z8MnPd1uu6/MrDCRFsMKm/fZQoayu4IImD1OEWnCw==}
@@ -1386,6 +1412,15 @@ packages:
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
+
+  lottie-react@2.4.1:
+    resolution: {integrity: sha512-LQrH7jlkigIIv++wIyrOYFLHSKQpEY4zehPicL9bQsrt1rnoKRYCYgpCUe5maqylNtacy58/sQDZTkwMcTRxZw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  lottie-web@5.12.2:
+    resolution: {integrity: sha512-uvhvYPC8kGPjXT3MyKMrL3JitEAmDMp30lVkuq/590Mw9ok6pWcFCwXJveo0t5uqYw1UREQHofD+jVpdjBv8wg==}
 
   lru-cache@10.2.2:
     resolution: {integrity: sha512-9hp3Vp2/hFQUiIwKo8XCeFVnrg8Pk3TYNPIR7tJADKi5YfcF7vEaK7avFHTlSy3kOKYaJQaalfEo6YuXdceBOQ==}
@@ -2371,6 +2406,21 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
       tslib: 2.6.3
+
+  '@tanstack/query-core@5.67.1': {}
+
+  '@tanstack/query-devtools@5.65.0': {}
+
+  '@tanstack/react-query-devtools@5.67.1(@tanstack/react-query@5.67.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-devtools': 5.65.0
+      '@tanstack/react-query': 5.67.1(react@18.3.1)
+      react: 18.3.1
+
+  '@tanstack/react-query@5.67.1(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-core': 5.67.1
+      react: 18.3.1
 
   '@telegram-apps/bridge@1.9.0':
     dependencies:
@@ -3581,6 +3631,14 @@ snapshots:
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
+
+  lottie-react@2.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      lottie-web: 5.12.2
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  lottie-web@5.12.2: {}
 
   lru-cache@10.2.2: {}
 

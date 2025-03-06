@@ -1,49 +1,53 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { TonConnectButton } from '@tonconnect/ui-react';
 import { List } from '@telegram-apps/telegram-ui';
-import { GetTokensResponse, NFTTokenInfo } from '@/app/api/tokens/types';
 import NFTTokenCard from '@/components/NFTTokenCard';
 import { InfiniteLoader } from '@/components/Loaders/InfiniteLoader';
 import { InfiniteLoaderEnd } from '@/components/Loaders/InfiniteLoaderEnd';
 import { withAuth } from '@/components/hoc/withAuth';
+import { useTokens } from '@/hooks/useTokens';
+import ReloadButton from './components/ReloadButton';
+import NoData from './components/NoData';
+import { REVALIDATE_TIME } from './constants';
 import './styles.css';
 
 const Marketplace = () => {
-  const [nftTokensInfo, setNftTokensInfo] = useState<NFTTokenInfo[]>([]);
-  const [hasMoreData, setHasMoreData] = useState<boolean>(true);
-  const [nextPage, setNextPage] = useState<string>('');
+  const { data, isPending, hasNextPage, fetchNextPage, isStale, refetch } = useTokens({
+    staleTime: REVALIDATE_TIME,
+  });
 
-  const fetchTokens = useCallback(async () => {
-    const res = await fetch(`/api/tokens?page=${nextPage}`, { method: 'GET' });
-    const { data, hasMore, nextPage: page }: GetTokensResponse = await res.json();
-    setNftTokensInfo([...nftTokensInfo, ...data]);
-    setNextPage(page);
-    setHasMoreData(hasMore);
-  }, [nftTokensInfo, nextPage]);
+  if (isPending) {
+    return <InfiniteLoader />
+  }
 
-  useEffect(() => {
-    fetchTokens()
-  }, [])
+  const tokens = data?.pages.flatMap(page => page.data) || [];
+
+  if (!tokens.length) {
+    return <NoData />
+  }
 
   return (
     <>
       <TonConnectButton className="ton-connect-page__button-connected"/>
       <List>
         <InfiniteScroll
-          dataLength={nftTokensInfo.length}
-          next={fetchTokens}
-          hasMore={hasMoreData}
+          dataLength={tokens.length}
+          next={fetchNextPage}
+          hasMore={hasNextPage}
           loader={<InfiniteLoader />}
           endMessage={<InfiniteLoaderEnd />}
         >
-          {nftTokensInfo.map((token) => (
+          {tokens.map((token) => (
             <NFTTokenCard key={token.friendlyAddress} nftTokenInfo={token}/>
           ))}
         </InfiniteScroll>
       </List>
+
+      {isStale && !isPending && (
+        <ReloadButton text='Reload' onClick={() => refetch()} />
+      )}
     </>
   );
 };

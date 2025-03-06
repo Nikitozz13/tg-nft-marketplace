@@ -1,10 +1,10 @@
 import React from "react";
-import { Spinner } from "@telegram-apps/telegram-ui";
+import { Placeholder, Spinner } from "@telegram-apps/telegram-ui";
 
 export const InfiniteLoader: React.FC = () => {
   return (
-    <div className='flex justify-center p-2 pb-8'>
+    <Placeholder>
       <Spinner size='m' />
-    </div>
+    </Placeholder>
   )
 };
