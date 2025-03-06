@@ -13,18 +13,26 @@ import { REVALIDATE_TIME } from './constants';
 import './styles.css';
 
 const Marketplace = () => {
-  const { data, isPending, hasNextPage, fetchNextPage, isStale, refetch } = useTokens({
+  const {
+    data,
+    isPending,
+    isRefetching,
+    hasNextPage,
+    fetchNextPage,
+    isStale,
+    refetch,
+  } = useTokens({
     staleTime: REVALIDATE_TIME,
   });
 
-  if (isPending) {
+  if (isPending || isRefetching) {
     return <InfiniteLoader />
   }
 
   const tokens = data?.pages.flatMap(page => page.data) || [];
 
   if (!tokens.length) {
-    return <NoData />
+    return <NoData onClick={() => refetch()} />
   }
 
   return (
