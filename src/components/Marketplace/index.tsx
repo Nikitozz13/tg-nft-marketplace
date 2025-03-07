@@ -8,7 +8,7 @@ import { InfiniteLoaderEnd } from '@/components/Loaders/InfiniteLoaderEnd';
 import { withAuth } from '@/components/hoc/withAuth';
 import { useTokens } from '@/hooks/useTokens';
 import ReloadButton from './components/ReloadButton';
-import NoData from './components/NoData';
+import ErrorContent from './components/ErrorContent';
 import { REVALIDATE_TIME } from './constants';
 import './styles.css';
 
@@ -21,9 +21,21 @@ const Marketplace = () => {
     fetchNextPage,
     isStale,
     refetch,
+    isError,
   } = useTokens({
     staleTime: REVALIDATE_TIME,
   });
+
+  if (isError) {
+    return (
+      <ErrorContent
+        text="Oops, the wrong turn.."
+        description="Should we try again?"
+        buttonText="Fix the Glitch!"
+        onClick={() => refetch()}
+      />
+    )
+  }
 
   if (isPending || isRefetching) {
     return <InfiniteLoader />
@@ -32,7 +44,7 @@ const Marketplace = () => {
   const tokens = data?.pages.flatMap(page => page.data) || [];
 
   if (!tokens.length) {
-    return <NoData onClick={() => refetch()} />
+    return <ErrorContent onClick={() => refetch()} />
   }
 
   return (

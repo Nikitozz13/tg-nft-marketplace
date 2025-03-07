@@ -18,5 +18,6 @@ export const useTokens = (params?: UseTokensParams) => {
     initialPageParam: '',
     getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.nextPage : null,
     staleTime: params?.staleTime,
+    retry: 3,
   })
 }
