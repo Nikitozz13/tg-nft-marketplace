@@ -1,4 +1,4 @@
-import { FixedLayout, Placeholder } from "@telegram-apps/telegram-ui";
+import { FixedLayout } from "@telegram-apps/telegram-ui";
 
 type ImageModalProps = {
   imageUrl: string;
@@ -18,15 +18,17 @@ const ImageModal = ({
   if (!isOpen) return null;
 
   return (
-    <FixedLayout vertical='top' className='z-10'>
-      <Placeholder onClick={onClose}>
-        <img
-          src={imageUrl}
-          alt={alt}
-          className="max-w-80 max-h-80 object-contain"
-          onError={onError}
-        />
-      </Placeholder>
+    <FixedLayout
+      vertical='top'
+      className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'
+      onClick={onClose}
+    >
+      <img
+        src={imageUrl}
+        alt={alt}
+        className="w-80 h-80 max-w-80 max-h-80 object-contain"
+        onError={onError}
+      />
     </FixedLayout>
   );
 };
