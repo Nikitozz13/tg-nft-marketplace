@@ -1,5 +1,6 @@
 'use client';
 
+import Header from '@/components/Header';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { List } from '@telegram-apps/telegram-ui';
 import NFTTokenCard from '@/components/NFTTokenCard';
@@ -49,6 +50,7 @@ const Marketplace = () => {
 
   return (
     <>
+      <Header />
       <List>
         <InfiniteScroll
           dataLength={tokens.length}
