@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Card, FixedLayout, Placeholder } from '@telegram-apps/telegram-ui';
+import { Card } from '@telegram-apps/telegram-ui';
 import { NFTTokenInfo } from '@/app/api/tokens/types';
 import TextWithDefault from './components/TextWithDefault';
 import CopyButton from './components/CopyButton';

@@ -1,6 +1,6 @@
 'use client';
 
-import { useInfiniteQuery, UseInfiniteQueryOptions } from "@tanstack/react-query"
+import { useInfiniteQuery } from "@tanstack/react-query"
 import { GetTokensResponse } from "@/app/api/tokens/types";
 
 const getTokens = async ({ pageParam }: { pageParam: string }): Promise<GetTokensResponse> => {

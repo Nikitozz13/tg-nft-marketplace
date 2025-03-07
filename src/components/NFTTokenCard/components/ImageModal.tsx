@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { FixedLayout, Placeholder } from "@telegram-apps/telegram-ui";
 
 type ImageModalProps = {
